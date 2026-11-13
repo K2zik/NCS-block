@@ -20,22 +20,13 @@
 
 ## Сборка
 
-Нужен jar NCS той же версии в `libs/ncs-<mc>.jar` (только для компиляции). Собрать его из исходников NCS:
-
-```
-cd ..\Noobs-Container-Searcher-master
-.\gradlew.bat build -Pmc=1.21.11 -PnoBump
-copy build\libs\noobs-container-searcher.jar ..\NCS-Block\libs\ncs-1.21.11.jar
-```
-
-Затем:
-
 ```
 .\gradlew.bat build -Pmc=1.21.11
 .\gradlew.bat build -Pmc=26.2
 ```
 
-JAR: `build/libs/`. Иконка мода - `src/main/resources/assets/ncs_block/icon.png`.
+JAR: `build/libs/`. Noob's Container Searcher скачивается с Modrinth автоматически (только для компиляции),
+его версия задаётся в `gradle.properties` (`ncs_version`). Иконка мода - `src/main/resources/assets/ncs_block/icon.png`.
 
 ## Лицензия
 

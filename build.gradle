@@ -29,9 +29,34 @@ base {
 	archivesName = project.archives_base_name
 }
 
-def ncsJar = file("libs/ncs-${minecraftVersion}.jar")
+repositories {
+	maven {
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+}
+
+def ncsImpl = "impl/${mcProps.compat_source_set}.jar"
+def ncsJar = file(".gradle/ncs/ncs-${project.ncs_version}-${mcProps.compat_source_set}.jar")
 if (!ncsJar.exists()) {
-	throw new GradleException("NCS jar for ${minecraftVersion} not found: ${ncsJar}")
+	def ncsUniversal = configurations.detachedConfiguration(
+		dependencies.create("maven.modrinth:noobs-container-searcher:${project.ncs_version}"))
+	ncsUniversal.transitive = false
+	ncsJar.parentFile.mkdirs()
+	def zip = new java.util.zip.ZipFile(ncsUniversal.singleFile)
+	try {
+		def entry = zip.getEntry(ncsImpl)
+		if (entry == null) {
+			throw new GradleException("${ncsImpl} not found in Noob's Container Searcher ${project.ncs_version}")
+		}
+		zip.getInputStream(entry).withCloseable { input ->
+			java.nio.file.Files.copy(input, ncsJar.toPath())
+		}
+	} finally {
+		zip.close()
+	}
 }
 
 dependencies {

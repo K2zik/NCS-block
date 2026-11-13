@@ -20,22 +20,13 @@ Put the jar for your Minecraft version into `mods` next to NCS. The game will no
 
 ## Building
 
-The NCS jar for the same Minecraft version is needed in `libs/ncs-<mc>.jar` (compile only). Build it from the NCS sources:
-
-```
-cd ..\Noobs-Container-Searcher-master
-.\gradlew.bat build -Pmc=1.21.11 -PnoBump
-copy build\libs\noobs-container-searcher.jar ..\NCS-Block\libs\ncs-1.21.11.jar
-```
-
-Then:
-
 ```
 .\gradlew.bat build -Pmc=1.21.11
 .\gradlew.bat build -Pmc=26.2
 ```
 
-Jars end up in `build/libs/`. The mod icon is `src/main/resources/assets/ncs_block/icon.png`.
+Jars end up in `build/libs/`. Noob's Container Searcher is downloaded from Modrinth automatically (compile only);
+its version is `ncs_version` in `gradle.properties`. The mod icon is `src/main/resources/assets/ncs_block/icon.png`.
 
 ## License
 

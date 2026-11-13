@@ -7,8 +7,6 @@ classes/
 remappedSrc/
 .kotlin/
 
-libs/
-
 .idea/
 *.iml
 *.ipr

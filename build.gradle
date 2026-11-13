@@ -1,0 +1,70 @@
+buildscript {
+	def selectedMc = project.hasProperty("mc") ? project.property("mc").toString() : "26.2"
+	def selectedProps = new Properties()
+	def mcPropsFile = new File(rootDir, "gradle/mc-${selectedMc}.properties")
+	if (!mcPropsFile.exists()) {
+		throw new GradleException("Unsupported Minecraft version: ${selectedMc} (${mcPropsFile} not found)")
+	}
+	mcPropsFile.withInputStream { selectedProps.load(it) }
+	project.ext.mc = selectedMc
+	project.ext.mcProps = selectedProps
+
+	repositories {
+		maven { url = "https://maven.fabricmc.net/" }
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath "net.fabricmc:fabric-loom:${selectedProps.loom_version}"
+	}
+}
+
+apply plugin: mcProps.loom_plugin_id
+
+def minecraftVersion = mcProps.minecraft_version
+
+version = "${project.mod_version}+mc${minecraftVersion}"
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+def ncsJar = file("libs/ncs-${minecraftVersion}.jar")
+if (!ncsJar.exists()) {
+	throw new GradleException("NCS jar for ${minecraftVersion} not found: ${ncsJar}")
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${minecraftVersion}"
+	if (mcProps.use_mojang_mappings == "true") {
+		mappings loom.officialMojangMappings()
+	}
+	add(mcProps.mod_dependency_configuration, "net.fabricmc:fabric-loader:${mcProps.loader_version}")
+	add(mcProps.mod_dependency_configuration == "modImplementation" ? "modCompileOnly" : "compileOnly", files(ncsJar))
+	if (project.hasProperty("withFabricApi")) {
+		add(mcProps.mod_dependency_configuration == "modImplementation" ? "modRuntimeOnly" : "runtimeOnly",
+			"net.fabricmc.fabric-api:fabric-api:${mcProps.fabric_api_version}")
+	}
+}
+
+processResources {
+	inputs.property "version", project.mod_version
+	inputs.property "minecraft_dependency", mcProps.minecraft_dependency
+	inputs.property "java_version", mcProps.java_version
+	inputs.property "ncs_impl", mcProps.compat_source_set
+	filesMatching("fabric.mod.json") {
+		expand(
+			"version": project.mod_version,
+			"minecraft_dependency": mcProps.minecraft_dependency,
+			"java_version": mcProps.java_version
+		)
+	}
+	filesMatching("ncs_block.properties") {
+		expand("ncs_impl": mcProps.compat_source_set)
+	}
+}
+
+tasks.withType(JavaCompile).configureEach {
+	options.release = Integer.parseInt(mcProps.java_version)
+	options.encoding = "UTF-8"
+}

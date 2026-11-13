@@ -1,28 +1,26 @@
 # NCS Block
 
-Клиентский Fabric-аддон для **Noob's Container Searcher**: запрещает рерол библиотекаря.
-Остальной функционал NCS (поиск, подсветка, изменения в сундуках) работает как обычно.
+**English** | [Русский](README.ru.md)
 
-Отдельный jar для каждой версии Minecraft (версия мода - `1.0.0`):
-- `ncs-block-1.0.0+mc1.21.11.jar`
-- `ncs-block-1.0.0+mc26.2.jar`
+A client-side Fabric addon for **Noob's Container Searcher** that blocks the librarian reroll feature.
+Everything else in NCS (search, highlights, container changes) works as usual.
 
-## Установка
+## Installation
 
-Положить jar своей версии в `mods` рядом с NCS. Без NCS игра не запустится (NCS указан в `depends`).
+Put the jar for your Minecraft version into `mods` next to NCS. The game will not start without NCS (it is listed in `depends`).
 
-## Что делает
+## What it does
 
-- Вкладка «Рерол» в меню NCS (`G`) затемнена, перед названием замок. При наведении -
-  подсказка «Этот функционал запрещён на СПм» (`assets/ncs_block/lang/*.json`).
-  Клик по вкладке ничего не делает, переключиться на неё нельзя (`switchTab` отменяется).
-- `ServerRules.rerollDisabled()` всегда `true` - как будто сервер поставил датапак `disable-librarian-reroll`.
-- Сам рерол не запустится, даже если до него как-то дойти: клики по жителю/лектерну не
-  перехватываются, `tick()` рерола не выполняется, начатый выбор сбрасывается.
+- The "Reroll" tab in the NCS menu (`G`) is dimmed and has a padlock before its name. Hovering it shows
+  a tooltip saying the feature is disabled (`assets/ncs_block/lang/*.json`).
+  Clicking the tab does nothing, and the screen can never switch to it (`switchTab` is cancelled).
+- `ServerRules.rerollDisabled()` always returns `true`, as if the server had installed the `disable-librarian-reroll` datapack.
+- The reroll itself never runs, even if it is reached some other way: clicks on the villager or lectern spot
+  are not captured, the reroll `tick()` does not run, and a started selection is reset.
 
-## Сборка
+## Building
 
-Нужен jar NCS той же версии в `libs/ncs-<mc>.jar` (только для компиляции). Собрать его из исходников NCS:
+The NCS jar for the same Minecraft version is needed in `libs/ncs-<mc>.jar` (compile only). Build it from the NCS sources:
 
 ```
 cd ..\Noobs-Container-Searcher-master
@@ -30,11 +28,15 @@ cd ..\Noobs-Container-Searcher-master
 copy build\libs\noobs-container-searcher.jar ..\NCS-Block\libs\ncs-1.21.11.jar
 ```
 
-Затем:
+Then:
 
 ```
 .\gradlew.bat build -Pmc=1.21.11
 .\gradlew.bat build -Pmc=26.2
 ```
 
-JAR: `build/libs/`. Иконка мода - `icon.png` в корне проекта (при сборке кладётся в `assets/ncs_block/`).
+Jars end up in `build/libs/`. The mod icon is `src/main/resources/assets/ncs_block/icon.png`.
+
+## License
+
+This project is licensed under the [MIT License](https://github.com/K2zik/NCS-block/blob/main/LICENSE).

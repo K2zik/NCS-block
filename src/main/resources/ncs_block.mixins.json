@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"minVersion": "0.8",
+	"package": "ru.k1zik.ncsblock.mixin",
+	"plugin": "ru.k1zik.ncsblock.NcsBlockMixinPlugin",
+	"compatibilityLevel": "JAVA_21",
+	"client": [
+		"ServerRulesMixin",
+		"LibrarianRerollControllerMixin",
+		"ContainerSearchScreenMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}
